@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+
+struct Point {
+  int x;
+  int y;
+  Point() : x(0), y(0) {}
+  Point(int a, int b) : x(a), y(b) {}
+};
+
+bool operator==(const Point& lhs, const Point& rhs) {
+  return (lhs.x == rhs.x) && (lhs.y == rhs.y);
+}
+bool operator<(const Point& lhs, const Point& rhs) {
+  return (lhs.x < rhs.x) || ((lhs.x == rhs.x) && (lhs.y < rhs.y));
+}
+
+struct Line {
+
+  /**
+   * There are multiple different points on a line.
+   */
+  std::set<Point> points;
+
+  /**
+   * At least two different points should be specified to construct a line.
+   * It is a common sense that two different points determine a line exactly
+   * and uniquely.
+   */
+  Line(Point point1, Point point2) {
+    points.insert(point1);
+    points.insert(point2);
+  }
+};
+
+bool collinear(const Point& p1, const Point& p2, const Point& p3) {
+  return (p3.x - p1.x) * (p2.y - p1.y) == (p3.y - p1.y) * (p2.x - p1.x);
+}
+/*
+bool operator==(const Line& lhs, const Line& rhs) {
+  const Point& p1 = *lhs.points.begin();
+  const Point& p2 = *(lhs.points.begin() + 1);
+  const Point& p3 = rhs.points[0];
+  const Point& p4 = rhs.points[1];
+  return collinear(p1, p2, p3) && collinear(p1, p2, p4);
+}
+*/
+/*
+int maxPoints(std::vector<Point>& points) {
+  for (int i = 0, size = points.size(); i < size; ++i) {
+    Point& point = points[i];
+    for (auto &line : lines) {
+      if (locate(point, line)) line.addPoint();
+    }
+  }
+}
+*/
+int main() {
+  Line l1(Point(2,5), Point(6,7));
+  Line l2(Point(6,7), Point(8,8));
+  //std::cout << (l1 == l2) << std::endl;
+  return 0;
+}
+
