@@ -1,3 +1,6 @@
+#ifndef _MAX_POINT_V0_HPP_
+#define _MAX_POINT_V0_HPP_
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,6 +14,14 @@
 
 enum LineEquiv { LINE_SMALLER, LINE_EQUIV, LINE_LARGER };
 
+/**
+ * The Point struct.
+ * In the problem specification, this definition is NOT allowed to change.
+ *
+ * For usage of this struct in STL data structure, especially orderd data
+ * structure like std::set, std::map, etc., here we additionally overload
+ * the operators ==, <, for this struct.
+ */
 struct Point {
   int x;
   int y;
@@ -18,6 +29,12 @@ struct Point {
   Point(int a, int b) : x(a), y(b) {}
 };
 
+/**
+ * Note the operator oveloading is outside the class definition.
+ * The operator should not be a member function of class Point, as the
+ * two arguments are actually symmetric. (Of course we are not allowed to
+ * change the original definition of class Point.)
+ */
 bool operator==(const Point& lhs, const Point& rhs) {
   return (lhs.x == rhs.x) && (lhs.y == rhs.y);
 }
@@ -37,25 +54,37 @@ public:
    * It is a common sense that two different points determine a line exactly
    * and uniquely.
    */
-  Line(Point _p1, Point _p2) : point1(_p1), point2(_p2) {
-    points.insert(_p1);
-    points.insert(_p2);
+  Line() = delete;
+  Line(const Point& _p1, const Point& _p2)
+      : point1(&_p1), point2(&_p2) {
+    points.emplace(_p1);
+    points.emplace(_p2);
   }
-
-  const Point& p1() const { return this->point1; }
-  const Point& p2() const { return this->point2; }
+  const Point& p1() const { return *(this->point1); }
+  const Point& p2() const { return *(this->point2); }
   
 private:
-
-  /**
-   * The two points which exactly and uniquely determine the line.
-   * Once a line is constructed, the two points are actually automatically
-   * registered. Additionally, the two points should remain unchanged
-   * unless the geometric information of the line changes.
-   */
-  Point point1, point2;
+  const Point *point1, *point2;
 };
 
+/**
+ * This function is very important for us to determine the order of lines.
+ * A line can be simply represented by its slope and bias (the slope is
+ * not necessary to exist). The comparison we use here is that
+ *
+ * [1] If slope values of two lines both exist, compare (k1, b1) and
+ *     (k2, b2) by dictionary order.
+ * [2] If only one slope value exists, the line with existing slope should
+ *     be smaller than the other one.
+ * [3] If both do not exist, then both lines can be represented as a simple
+ *     equality x = c, where c is a constant. Compare c1 and c2, where the
+ *     lines can be represented by x = c1 and x = c2 respectively.
+ *
+ * @return LINE_SMALLER, if @lhs is smaller than @rhs.
+ * @return LINE_EQUIV, if @lhs and @rhs are actually equivalent, or in
+ *         other words, the same line.
+ * @return LINE_LARGER, if @lhs is larger than @rhs.
+ */
 LineEquiv diff(const Line& lhs, const Line& rhs) {
   // Get the four relavant points on the two lines.
   const Point &p1 = lhs.p1(), &p2 = lhs.p2();
@@ -97,34 +126,34 @@ LineEquiv diff(const Line& lhs, const Line& rhs) {
   }
   return LINE_EQUIV;
 }
-
 bool operator==(const Line& lhs, const Line& rhs) {
   return diff(lhs, rhs) == LINE_EQUIV;
 }
 bool operator<(const Line& lhs, const Line& rhs) {
   return diff(lhs, rhs) == LINE_SMALLER;
 }
-bool operator>(const Line& lhs, const Line& rhs) {
-  return diff(lhs, rhs) == LINE_LARGER;
-}
 
 class Solution {
 public:
+
+  Solution() {    
+    std::map<Point, std::size_t>().swap(this->pset);
+  }
+  
   int maxPoints(std::vector<Point>& points) {
     // Find the weight (number of occurrence) of each point in the vector.
+    // Return zero if the input vector has no point.
     std::size_t size = points.size();
-    std::map<Point, std::size_t> pset;
+    if (size == 0) return 0;
+    
     for (std::size_t i = 0; i < size; ++i) ++pset[points[i]];
     std::vector<Point> pts;
-    std::transform(pset.begin(), pset.end(), std::back_inserter(pts),
-                   [&](const std::pair<Point, std::size_t>& item)
-                   { return item.first; });
+    pts.reserve(pset.size());
+    for(auto it = pset.begin(), end = pset.end(); it != end; ++it)
+      pts.emplace_back(it->first);
 
-    // Return zero if the input vector has less than 2 points.
     size = pts.size();
-    if (size == 0) return 0;
     if (size == 1) return pset[pts[0]];
-    
     // We define a set (this set is ordered, so we must define how to sort
     // the line objects) of lines here.
     std::set<Line> table;
@@ -136,49 +165,36 @@ public:
         // current point and plus 1 to the corresponding value field.
         Line line(point, pts[j]);
         auto it = table.find(line);
-        if (it == table.end())
-          table.insert(line);
         // Note the map::find() will return a const iterator, so we have to
         // cast the type to discard the qualifier before inserting.
-        else
-          const_cast<std::set<Point>&>(it->points).insert(point);
+        if (it == table.end()) table.emplace(line);
+        else const_cast<std::set<Point>&>(it->points).emplace(point);
       }
     }
-    auto total =
-        [&](const Line& line) {
-          return std::accumulate(line.points.begin(), line.points.end(), 0,
-                                 [&](std::size_t w, const Point& p)
-                                 { return w + pset[p]; });
-        };
-    // Now find the maximum number of points on a line.
-    const Line& target = *std::max_element(
-        table.begin(), table.end(),
-        [&](const Line& line1, const Line& line2)
-        { return total(line1) < total(line2); });
-    int num = total(target);
+    int num = 0;
+    // Also you can use other c++11 features to simplify this loop, but
+    // probably you will lose efficiency.
+    for (auto it = table.begin(), end = table.end(); it != end; ++it) {
+      int tmp = total(*it);
+      if (tmp > num) num = tmp;
+    }
     return num;
   }
 
+private:
+
+  /**
+   * For each line, compute the total weights of points on it.
+   * The return value is std::size_t type.
+   */
+  std::size_t total(const Line& line) {
+    std::size_t sum = 0;
+    for (auto it = line.points.begin(), end = line.points.end();
+         it != end; ++it) sum += pset[*it];
+    return sum;
+  }
+  std::map<Point, std::size_t> pset;
 };
 
-void fromString(std::vector<Point>& points, char* str) {
-    char *token = std::strtok(str, " [,]");
-    while (token != NULL) {
-      int x = strtol(token, NULL, 10);
-      token = std::strtok(NULL, " [,]");
-      int y = strtol(token, NULL, 10);
-      token = std::strtok(NULL, " [,]");
-      points.push_back(Point(x, y));
-    }
-}
-
-int main() {
-  char str[] = "[[40,-23],[9,138],[429,115],[50,-17],[-3,80],[-10,33],[5,-21],[-3,80],[-6,-65],[-18,26],[-6,-65],[5,72],[0,77],[-9,86],[10,-2],[-8,85],[21,130],[18,-6],[-18,26],[-1,-15],[10,-2],[8,69],[-4,63],[0,3],[-4,40],[-7,84],[-8,7],[30,154],[16,-5],[6,90],[18,-6],[5,77],[-4,77],[7,-13],[-1,-45],[16,-5],[-9,86],[-16,11],[-7,84],[1,76],[3,77],[10,67],[1,-37],[-10,-81],[4,-11],[-20,13],[-10,77],[6,-17],[-27,2],[-10,-81],[10,-1],[-9,1],[-8,43],[2,2],[2,-21],[3,82],[8,-1],[10,-1],[-9,1],[-12,42],[16,-5],[-5,-61],[20,-7],[9,-35],[10,6],[12,106],[5,-21],[-5,82],[6,71],[-15,34],[-10,87],[-14,-12],[12,106],[-5,82],[-46,-45],[-4,63],[16,-5],[4,1],[-3,-53],[0,-17],[9,98],[-18,26],[-9,86],[2,77],[-2,-49],[1,76],[-3,-38],[-8,7],[-17,-37],[5,72],[10,-37],[-4,-57],[-3,-53],[3,74],[-3,-11],[-8,7],[1,88],[-12,42],[1,-37],[2,77],[-6,77],[5,72],[-4,-57],[-18,-33],[-12,42],[-9,86],[2,77],[-8,77],[-3,77],[9,-42],[16,41],[-29,-37],[0,-41],[-21,18],[-27,-34],[0,77],[3,74],[-7,-69],[-21,18],[27,146],[-20,13],[21,130],[-6,-65],[14,-4],[0,3],[9,-5],[6,-29],[-2,73],[-1,-15],[1,76],[-4,77],[6,-29]]";
-  std::vector<Point> points;
-  fromString(points, str);
-  Solution sol;
-  int maxNum = sol.maxPoints(points);
-  std::cout << maxNum << std::endl;
-  return 0;
-}
+#endif
 
