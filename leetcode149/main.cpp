@@ -6,14 +6,14 @@
  * This function is just for simple tests.
  * Do not use it in other situation.
  */
-void fromString(std::vector<Point>& points, std::string str) {
+void fromString(std::vector<Point>& points, std::string& str) {
   char *token = std::strtok(&str[0], " [,]");
   while (token != NULL) {
     int x = strtol(token, NULL, 10);
     token = std::strtok(NULL, " [,]");
     int y = strtol(token, NULL, 10);
     token = std::strtok(NULL, " [,]");
-    points.emplace_back(Point(x, y));
+    points.emplace_back(x, y);
   }
 }
 
