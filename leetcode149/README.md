@@ -56,3 +56,44 @@ int maxPoints(std::vector<Point>& points) {
   return num;
 }
 ```
+
+# Improvement
+显而易见上面的算法太慢了，虽然很多操作看起来让结构变得完整，但就这道题目来讲实际上是不必要的，比如说`Line`这个类没有太大的存在意义，并且重载它的`<`运算符太耗时了。在改进的版本中`set`和`map`的使用都被彻底删掉了，我们只需要对`vector<Point>`的数据进行去重，记录每一个点的权重就可以了。
+```
+using PointWeight = std::pair<Point*, std::size_t>;
+std::vector<PointWeight> weights;
+```
+定义点的权重由它在内存中的地址和一个非负整数权重的`pair`组成。遍历每一个点，寻找当前`weights`中是否已经有点和这个点是等价的，如果找到了，就在其权重上加一，表示它的出现次数多了一次；如果没有找到，那么将这个点加入到`weights`当中，权重为1。出于效率上的原因，用C++11的`emplace_back`替代`push_back`。
+```
+for (auto &point : points) {
+  auto it = weights.begin(), end = weights.end();
+  for (; it != end; ++it)
+    if (*(it->first) == point) {
+      ++(it->second);
+      break;
+    }
+  if (it == end) weights.emplace_back(&point, 1);
+}
+```
+现在完成了去重的步骤。与上面的办法不同的是，不再另外定义`Line`类，因为狭义地讲，这里每一条直线都可以用两个weights中的点的索引表示，因此两个非负整表示一条直线就足够了。
+```
+using Line = std::pair<std::size_t, std::size_t>;
+std::vector<std::pair<Line, std::size_t> > lines;
+```
+上面这个`lines`的每一个条目都是一条直线和它经过的点的总权重。和上面类似地，遍历去重后的`weights`中的每一个点`p`，检查它是否坐落在当前`lines`的某一条直线上，也就是遍历`lines`的每一条直线`line`，判断决定它的两个点`p1,p2`以及当前点`p`是否三点共线。
+```
+Point& p1 = *(weights[line.first].first);
+Point& p2 = *(weights[line.second].first);
+locate = ((long)(p.x - p1.x) * (p.y - p2.y) ==
+          (long)(p.x - p2.x) * (p.y - p1.y));
+```
+注意这里要转换成`long`类型，因为`int`类型对于表达两个整数的乘积是不够用的。变量`locate`为`true`时，表示点`p`坐落在直线`lines`上，这时就要把`p`记录在`weights`中的权重加入到经过它的直线`line`的总权重中。如果没有找到这样的直线，表示点`p`和之前遍历过的每一点决定的直线，都是一条新的直线，需要被加入到`lines`中：
+```
+for (int j = 0; j != i; ++j) {
+  int w = weights[j].second + weight;
+  lines.emplace_back(std::make_pair(j, i), w);
+}
+```
+最后循环结束后选出总权重最大的即可。当然，这个最大权重可以在上面的遍历步骤中同时完成。
+
+一个问题是为什么这样做可以极大地改进效率？它避免了排序的操作，根本没有必要去定义如何给点或者直线排序，只需要判定什么样的情况下两个点或者两条直线等价。应该说这是最大的一个改进。实现的时候C++的代码有很多可以深挖的地方，比如指针和引用的使用，比如向数据结构插入新元素时使用`emplace`，一个小细节可以也可以很大程度地影响效率。
