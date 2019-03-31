@@ -55,6 +55,10 @@ delete[] buffer;
 ```
 这个`num`也就是矩阵中最右下角的数据就是要求的值。实际上还可以更精简，因为根本不需要两个数组，一个数组就够了。假设我们现在有第`m-1`行的数据，存储在`buffer`中，那么下一次更新，每一个位置的值只用到当前位置的值和前一个位置的值，因此从数组的最后一个位置倒着更新就可以了。
 ```
+uint nrows = s.length() + 1;
+uint ncols = t.length() + 1;
+if (nrows < ncols) return 0;
+
 uint buffer[ncols];
 std::fill(buffer, buffer + ncols, 0);
 buffer[0] = 1;
