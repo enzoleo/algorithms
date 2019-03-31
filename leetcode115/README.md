@@ -19,3 +19,53 @@ if (s[len1 - 1] == t[len2 - 1])
 
 ## Optimization
 从另一个角度想问题，不用递归，而是从较小的`m,n`开始慢慢构造。
+
+|dist|-|b|ba|bag|
+| :--- | :---: | --- | --- | --- |
+|**-**|1||||
+|**b**|1||||
+|**ba**|1|1|||
+|**bab**|1|2|1||
+|**babg**|1|2|1|1|
+|**babgb**|1|3|1|1|
+|**babgba**|1|3|4|1|
+|**babgbag**|1|3|4|5|
+
+上面这个表格的思路就很明显了，除了第一列和第一行，每一个位置的值都是其上面一行对应位置的值或者再加上上面一行左边一列位置的值，这取决于在该处的行列索引对应到两个字符串的字符是否相等。这样计算就大大精简了计算过程。另外也没有必要使用一整个矩阵大小的内存，两个数组就足够了，一个（下面代码的`arr`）用来存取上一行的数据，另一个（下面代码中的`buffer`）计算当前行的数据，每次计算完成交换它们的位置。
+```
+uint *arr = new uint[len2 + 1];
+uint *buffer = new uint[len2 + 1];
+std::fill(arr, arr + len2 + 1, 0);
+std::fill(buffer, buffer + len2 + 1, 0);
+arr[0] = 1;
+
+for (uint i = 1; i <= len1; ++i) {
+  buffer[0] = 1;
+  uint ub = std::min(i, len2);
+  for (uint k = 1; k <= ub; ++k) {
+    buffer[k] = arr[k];
+    if (s[i - 1] == t[k - 1])
+       buffer[k] += arr[k - 1];
+  }
+  std::swap(buffer, arr);
+}
+uint num = arr[len2];
+delete[] arr;
+delete[] buffer;
+```
+这个`num`也就是矩阵中最右下角的数据就是要求的值。实际上还可以更精简，因为根本不需要两个数组，一个数组就够了。假设我们现在有第`m-1`行的数据，存储在`buffer`中，那么下一次更新，每一个位置的值只用到当前位置的值和前一个位置的值，因此从数组的最后一个位置倒着更新就可以了。
+```
+uint buffer[ncols];
+std::fill(buffer, buffer + ncols, 0);
+buffer[0] = 1;
+for (uint i = 1; i != nrows; ++i) {
+  uint ub = std::min(i, ncols - 1);
+  char ch = s[i - 1];
+  for (uint k = ub; k != 0; --k)
+    if (ch == t[k - 1])
+       buffer[k] += buffer[k - 1];
+}
+uint num = buffer[ncols - 1];
+return num;
+```
+代码足够精简，时间和空间上的效果也上佳。
