@@ -15,13 +15,11 @@ public:
   
   int maxCoins(const std::vector<int>& v) {
     if (v.empty()) return 0;
-    this->ptr = &v[0];
-    this->n = v.size();
     this->clearCoins();
-    return maxCoins(0, n);
+    return maxCoins(v, 0, v.size());
   }
   
-  int maxCoins(size_t lb, size_t ub) {
+  int maxCoins(const std::vector<int>& v, size_t lb, size_t ub) {
     // This step is very important, because recursion goes time-consuming
     // dramatically as the array size increases. If one value has already
     // been computed, there is no need to do recursion to re-compute it.
@@ -34,10 +32,11 @@ public:
     // [lb, ub), there must be only one element in [lb, ub), we need to find
     // which element is last deleted from the array to maximize coins.
     int s = 0;
+    size_t n = v.size();
     for (size_t i = lb; i < ub; ++i) {
-      int tmp = maxCoins(lb, i) + maxCoins(i + 1, ub)
-          + ((lb == 0) ? 1 : ptr[lb - 1])
-          * ((ub == n) ? 1 : ptr[ub]) * ptr[i];
+      int tmp = maxCoins(v, lb, i) + maxCoins(v, i + 1, ub)
+          + ((lb == 0) ? 1 : v[lb - 1])
+          * ((ub == n) ? 1 : v[ub]) * v[i];
       if (tmp > s) s = tmp;
     }
     // Record the coins once computed!
@@ -46,9 +45,6 @@ public:
   }
 
 private:
-
-  const int* ptr;
-  size_t n;
   
   int coins[500][500];
   
