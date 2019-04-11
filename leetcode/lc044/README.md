@@ -10,7 +10,7 @@
 
 如果用公式抽象一下这个递推过程，就是
 
-![equation](https://latex.codecogs.com/gif.latex?f%28m%2Cn%29%3D%5Cleft%5C%7B%20%5Cbegin%7Barray%7D%7Bll%7D%20%5Ctext%7Bfalse%7D%26%2C%5Ctext%7Bif%20%7Dt%5Bm-1%5D%5Cneq%20s%5Bn-1%5D%5Ctext%7B%20and%20%7Dt%5Bm-1%5D%5Cneq%5Ctexttt%7B%60%3F%27%7D%5C%5C%20f%28m-1%2Cn-1%29%26%2C%5Ctext%7Bif%20%7Dt%5Bm-1%5D%3Ds%5Bn-1%5D%5Ctext%7B%20or%20%7Dt%5Bm-1%5D%3D%5Ctexttt%7B%60%3F%27%7D%5C%5C%20%5Cbigvee%5Climits_%7Bi%3D0%7D%5E%7Bn%7D%20f%28m-1%2Ci%29%20%26%2C%5Ctext%7Bif%20%7Dt%5Bm-1%5D%3D%5Ctexttt%7B%60*%27%7D%20%5Cend%7Barray%7D%20%5Cright.)
+![equation](https://github.com/enzoleo/algorithms/blob/master/leetcode/lc044/lc044.svg)
 
 这个动态规划的式子就算完成了。程序实现只需要注意一下循环求或的步骤即可。下面给一个简单的例子来解释一下矩阵的构造过程。
 
