@@ -15,11 +15,11 @@
 这个动态规划的式子就算完成了。程序实现只需要注意一下循环求或的步骤即可。下面给一个简单的例子来解释一下矩阵的构造过程。
 
 |isMatch|-|a|ad|adc|adce|adceb|
-| :--- | --- | --- | --- | --- | --- | --- |
-|**-**|true|false|false|false|false|false|
-|**\***|true|true|true|true|true|true|
-|**\*a**|false|true|false|false|false|false|
-|**\*a\***|false|true|true|true|true|true|
-|**\*a*b**|false|false|false|false|false|true|
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+|**-**|:heavy_check_mark:|:x:|:x:|:x:|:x:|:x:|
+|**\***|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+|**\*a**|:x:|:heavy_check_mark:|:x:|:x:|:x:|:x:|
+|**\*a\***|:x:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+|**\*a*b**|:x:|:x:|:x:|:x:|:x:|:heavy_check_mark:|
 
 这个矩阵自上而下的构造然后取右下角的元素输出，就是问题的答案。
