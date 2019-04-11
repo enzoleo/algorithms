@@ -10,7 +10,7 @@
 
 如果用公式抽象一下这个递推过程，就是
 
-![equation](https://github.com/enzoleo/algorithms/blob/master/leetcode/lc044/lc044.svg)
+<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc044/lc044.svg" width="600"></img>
 
 这个动态规划的式子就算完成了。程序实现只需要注意一下循环求或的步骤即可。下面给一个简单的例子来解释一下矩阵的构造过程。
 
