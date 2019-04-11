@@ -4,9 +4,9 @@
 ## Algorithm
 可以用下面的递推式来描述整个计算过程：
 
-<img src="https://github.com/enzoleo/algorithms/tree/master/leetcode/lc115/lc115.svg" width="600"></img>
+<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc115/lc115.svg" width="600"></img>
 
-这里的![equation](https://latex.codecogs.com/gif.latex?f_%7Bs%2Ct%7D%28m%2Cn%29)表示字符串`s`的前`m`个字符组成的子串包含`t`的前`n`个字符组成的子串的数目。这个递推很容易写出来，因为如果`s[0:m]`的最后一个字符和`t[0:n]`的最后一个字符不同，那么`s[0:m]`的最后一个字符根本就没有起到作用；如果相同，那么就要多考虑`s[0:m-1]`中包含`t[0:n-1]`的个数。如果直接写一个递推，在字符串比较小的情况下问题很好解决。
+这里的`f(m,n)`表示字符串`s`的前`m`个字符组成的子串包含`t`的前`n`个字符组成的子串的数目。这个递推很容易写出来，因为如果`s[0:m]`的最后一个字符和`t[0:n]`的最后一个字符不同，那么`s[0:m]`的最后一个字符根本就没有起到作用；如果相同，那么就要多考虑`s[0:m-1]`中包含`t[0:n-1]`的个数。如果直接写一个递推，在字符串比较小的情况下问题很好解决。
 ```
 size_t len1 = s.length();
 size_t len2 = t.length();
