@@ -9,10 +9,11 @@
 
 假设输入的数有n位，目标是求出`f(n)`，主要考虑这一位数字`v[n-1]`比2大的情况。此时若选取的比它小的数在该位恰好比`v[n-1]`小，那么后面的数字可以任意取，也就是说包含的所有满足条件的数字中含有数字1的个数为
 
-<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/lc233_formula.svg" width="400"></img>
+<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_formula.svg" width="350"></img>
 
 总结一下，递推公式可以写为下面的形式
 
-<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/lc233_iter.svg" width="600"></img>
+<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_iter.svg" width="600"></img>
 
 一个简单的求和，问题就解决了。
+
