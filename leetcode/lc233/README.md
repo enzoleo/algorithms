@@ -13,7 +13,7 @@
 
 总结一下，递推公式可以写为下面的形式
 
-<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_iter.svg" width="600"></img>
+<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_iter.svg" width="650"></img>
 
 一个简单的求和，问题就解决了。
 
