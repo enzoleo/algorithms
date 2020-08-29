@@ -63,6 +63,12 @@ int pop_heap(Heap* heap) {
   return res;
 }
 
+// Get the top value only without modifying the heap.
+int peek_heap(const Heap* heap) {
+  assert(heap->size > 0);
+  return heap->data[0];
+}
+
 // Print heap elements.
 void print_heap(Heap* heap) {
   for (int i = 0, size = heap->size; i < size; ++i)
