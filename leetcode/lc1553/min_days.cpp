@@ -18,13 +18,12 @@ public:
   // memorization mechanism is added to avoid duplicate computation.
   static int minDaysMemorize(int n) {
     // Memorize the result to avoid duplicate computation.
-    std::unordered_map<int, int> memo;
+    std::unordered_map<int, int> memo = { { 0, 1 }, { 1, 1 } };
     std::function<int(int)> minDaysMemRecurse =
         [&](int n) -> int {
-          if (n < 2) return 1;
           if (memo.count(n)) return memo[n];
-          memo[n] = std::min(n % 2 + 1 + minDaysMemRecurse(n / 2),
-                             n % 3 + 1 + minDaysMemRecurse(n / 3));
+          memo[n] = std::min(n % 2 + minDaysMemRecurse(n / 2),
+                             n % 3 + minDaysMemRecurse(n / 3)) + 1;
           return memo[n];
         };
     return minDaysMemRecurse(n);
