@@ -71,7 +71,7 @@ This is all magic numbers in the first period. Here we always suppose `A<B`. We 
 
 We are going to solve the following inequality:
 
-![](http://latex.codecogs.com/gif.latex?\left\lfloor\frac{kB}{A}+k\right\rfloor\leq n<\left\lfloor\frac{(k+1)B}{A}+k+1\right\rfloor)
+![](http://latex.codecogs.com/gif.latex?\left\lfloor\frac{kB}{A}+k\right\rfloor\leq{}n<\left\lfloor\frac{(k+1)B}{A}+k+1\right\rfloor)
 
 The floor function has some special properties as its value locates between two integers. From the above inequality we get
 
