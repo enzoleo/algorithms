@@ -67,6 +67,14 @@ The problem now is very simple: *how to find the n-th magic number in the first 
 | 10   |    | 20   |    | 30   | 40   |    | 50   |    | 60   | 70   |
 |      | 14 |  | 28 |      |      | 42 |      | 56 |      | 70 |
 
-This is all magic numbers in the first period. Here we always suppose `A<B`. We can find the indices of all multipliers of `B=14`. For example, there are `A/gcd=5` multipliers of `B` in the first period, and for `i=1,2,3,4,5`, we know that the `i`th multiplier of `B` has a index of `floor((i*B)/A)+i`. Therefore, our target is to find `i` such that the `n`th magic number is between `i`th and `i+1`-th multiplier of `B`.
+This is all magic numbers in the first period. Here we always suppose `A<B`. We can find the indices of all multipliers of `B=14`. For example, there are `A/gcd=5` multipliers of `B` in the first period, and for `i=1,2,3,4,5`, we know that the `i`th multiplier of `B` has a index of `floor((i*B)/A)+i`, *e. g.* the index of 42 is `floor((3*14)/10)+3=7`. Therefore, our target is to find `i` such that the `n`th magic number is between `i`th and `i+1`-th multiplier of `B`.
 
 We are going to solve the following inequality:
+
+![](http://latex.codecogs.com/gif.latex?\left\lfloor\frac{kB}{A}+k\right\rfloor\leq n<\left\lfloor\frac{(k+1)B}{A}+k+1\right\rfloor)
+
+The floor function has some special properties as its value locates between two integers. From the above inequality we get
+
+![](http://latex.codecogs.com/gif.latex?\frac{nA}{A+B}-1<k<\frac{(n+1)A}{A+B})
+
+We obtain the lower bound and upper bound of the target value. However, unfortunately, these two bounds are not tight enough for us to determine the valid integer, as there might be two integers that are not beyond the bounds.
