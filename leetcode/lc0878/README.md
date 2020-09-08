@@ -79,7 +79,7 @@ The floor function has some special properties as its value locates between two 
 
 We obtain the lower bound and upper bound of the target value. However, unfortunately, these two bounds are not tight enough for us to determine the valid integer, as there might be two integers that are not beyond the bounds. The following two integers are both likely to be the `k` value
 
-![](http://latex.codecogs.com/gif.latex?\begin{aligned}k_0&=\left\lfloor\frac{nA}{A+B}\right\rfloor\\k_1&=\left\lfloor\frac{nA}{A+B}\right\rfloor+1\end{aligned})
+![](http://latex.codecogs.com/gif.latex?k_0=\left\lfloor\frac{nA}{A+B}\right\rfloor,k_1=\left\lfloor\frac{nA}{A+B}\right\rfloor+1)
 
 If `n>=k1` then the true `k` should be `k1`, otherwise `k` must be equal to `k0`. Once we find the true `k `value, we can easily deduct the value of `n` th *magic* number. For example, given `n=6`, from the above inference, we find `k=2`, and so there 2 multipliers of 14 that are no larger than `n` th *magic* number.
 
