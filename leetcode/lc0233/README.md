@@ -9,11 +9,11 @@
 
 假设输入的数有n位，目标是求出`f(n)`，主要考虑这一位数字`v[n-1]`比2大的情况。此时若选取的比它小的数在该位恰好比`v[n-1]`小，那么后面的数字可以任意取，也就是说包含的所有满足条件的数字中含有数字1的个数为
 
-<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_formula.svg" width="350"></img>
+![](http://latex.codecogs.com/gif.latex?\sum_{k=1}^{n-1}k\begin{pmatrix}n-1\cr{}k\end{pmatrix}\cdot{}9^{n-1-k}=(n-1)\cdot{}10^{n-2})
 
 总结一下，递推公式可以写为下面的形式
 
-<img src="https://github.com/enzoleo/algorithms/blob/master/leetcode/lc233/img/lc233_iter.svg" width="650"></img>
+![](http://latex.codecogs.com/gif.latex?f(n)=f(n-1)+\left\{\begin{array}{ll}0&\text{,\;if\;}v_{n-1}=0\cr(n-1)\cdot{}10^{n-2}+N\text{\,mod\,}10^{n-1}+1&\text{,\;if\;}v_{n-1}=1\cr(n-1)\cdot{}10^{n-2}+10^{n-1}&\text{,\;elsewhere}\end{array}\right.)
 
 一个简单的求和，问题就解决了。
 
