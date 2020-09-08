@@ -13,7 +13,9 @@
 
 总结一下，递推公式可以写为下面的形式
 
-![](http://latex.codecogs.com/gif.latex?f(n)=f(n-1)+\left\{\begin{array}{ll}0&\text{,\;if\;}v_{n-1}=0\cr(n-1)\cdot{}10^{n-2}+N\text{\,mod\,}10^{n-1}+1&\text{,\;if\;}v_{n-1}=1\cr(n-1)\cdot{}10^{n-2}+10^{n-1}&\text{,\;elsewhere}\end{array}\right.)
+![](https://latex.codecogs.com/svg.latex?f%28n%29%3Df%28n-1%29&plus;%5Cleft%5C%7B%20%5Cbegin%7Barray%7D%7Bll%7D%200%26%5Ctext%7B%2C%5C%3Bif%5C%3B%7Dv_%7Bn-1%7D%3D0%5Ccr%20%28n-1%29%5Ccdot%7B%7D10%5E%7Bn-2%7D&plus;N%5Ctext%7B%5C%2Cmod%5C%2C%7D10%5E%7Bn-1%7D&plus;1%26%5Ctext%7B%2C%5C%3Bif%5C%3B%7Dv_%7Bn-1%7D%3D1%5Ccr%20%28n-1%29%5Ccdot%7B%7D10%5E%7Bn-2%7D&plus;10%5E%7Bn-1%7D%26%5Ctext%7B%2C%5C%3Belsewhere%7D%20%5Cend%7Barray%7D%5Cright.)
 
 一个简单的求和，问题就解决了。
+
+
 
