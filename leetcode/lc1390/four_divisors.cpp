@@ -5,7 +5,7 @@
 
 class Solution {
 public:
-  int sumFourDivisors(const std::vector<int>& nums) {
+  static int sumFourDivisors(const std::vector<int>& nums) {
     int sum = 0;
     for (auto n : nums) sum += fourDivisorsNum(n);
     return sum;
@@ -31,18 +31,16 @@ public:
   }
 
   static int fourDivisorsNum(unsigned num) {
+    // Trivial cases.
     if (num < 5) return 0;
-    if (unsigned root = static_cast<unsigned>(std::round(std::cbrt(num)));
-        isPrime(root) && std::pow(root, 3) == num)
-      return 1 + root + root * root + num;
-
+    if (num == 8) return 15;
     if (num % 2 == 0)
       return isPrime(num / 2) ? (num + 3 + num / 2) : 0;
 
     unsigned ub = static_cast<unsigned>(std::round(std::sqrt(num))) + 1;
     for (unsigned k = 3; k < ub; k += 2) {
       if (num % k == 0 && num != k * k)
-        return isPrime(num / k) ? (num + k + num / k + 1) : 0;
+        return (isPrime(num / k) || num / k == k * k) ? (num + k + num / k + 1) : 0;
     }
     return 0;    
   }
