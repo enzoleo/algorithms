@@ -5,8 +5,10 @@
 
 class Solution {
 public:
-  int sumFourDivisors(std::vector<int>& nums) {
-    return 0;
+  int sumFourDivisors(const std::vector<int>& nums) {
+    int sum = 0;
+    for (auto n : nums) sum += fourDivisorsNum(n);
+    return sum;
   }
 
   // Check whether a given number is prime.
@@ -19,15 +21,30 @@ public:
     if (num < 2) return false;
     else if (num == 2) return true;
     else if (num % 2 == 0) return false;
-    unsigned ub = static_cast<unsigned>(std::floor(std::sqrt(num))) + 1;
+    unsigned ub = static_cast<unsigned>(std::round(std::sqrt(num))) + 1;
 
-    bool res = true;
+    // Find possible divisors.
     for (unsigned k = 3; k < ub; k += 2)
-      if (num % k == 0) {
-        res = false;
-        break;
-      }
-    return res;
+      if (num % k == 0)
+        return false;
+    return true;
+  }
+
+  static int fourDivisorsNum(unsigned num) {
+    if (num < 5) return 0;
+    if (unsigned root = static_cast<unsigned>(std::round(std::cbrt(num)));
+        isPrime(root) && std::pow(root, 3) == num)
+      return 1 + root + root * root + num;
+
+    if (num % 2 == 0)
+      return isPrime(num / 2) ? (num + 3 + num / 2) : 0;
+
+    unsigned ub = static_cast<unsigned>(std::round(std::sqrt(num))) + 1;
+    for (unsigned k = 3; k < ub; k += 2) {
+      if (num % k == 0 && num != k * k)
+        return isPrime(num / k) ? (num + k + num / k + 1) : 0;
+    }
+    return 0;    
   }
 };
 
@@ -35,7 +52,7 @@ int main() {
   std::vector<int> nums(30, 0);
   std::iota(nums.begin(), nums.end(), 1);
   for (auto n : nums)
-    std::cout << n << ": " << Solution::isPrime(n) << std::endl;
+    std::cout << n << ": " << Solution::fourDivisorsNum(n) << std::endl;
   return 0;
 }
 
