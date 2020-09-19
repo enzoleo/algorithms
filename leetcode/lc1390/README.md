@@ -14,3 +14,14 @@ Given an integer array `nums`, return the sum of divisors of the integers in tha
 
 ## Algorithm
 
+The idea is very intuitive. Suppose we have a number n and its prime factorization
+
+![](http://latex.codecogs.com/svg.latex?n=p_1^{\alpha_1}p_2^{\alpha_2}\cdots{}p_m^{\alpha_m})
+
+Then the number of its divisors is
+
+![](http://latex.codecogs.com/svg.latex?\tau(n)=\prod_{i=1}^m(1+\alpha_i)=(1+\alpha_1)(1+\alpha_2)\cdots(1+\alpha_m))
+
+and the sum of all its divisors is
+
+![](http://latex.codecogs.com/svg.latex?\sigma(n)=\prod_{i=1}^m\frac{p_i^{\alpha_i+1}-1}{p_i-1}=\frac{p_i^{\alpha_i+1}-1}{p_i-1}\frac{p_2^{\alpha_2+1}-1}{p_2-1}\cdots\frac{p_m^{\alpha_m+1}-1}{p_m-1})

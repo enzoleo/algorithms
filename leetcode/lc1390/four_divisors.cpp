@@ -5,6 +5,7 @@
 
 class Solution {
 public:
+  // Calculate the required value.
   static int sumFourDivisors(const std::vector<int>& nums) {
     int sum = 0;
     for (auto n : nums) sum += fourDivisorsNum(n);
@@ -30,6 +31,8 @@ public:
     return true;
   }
 
+  // Check whether a given number is valid (i.e. has four divisours) and
+  // return the sum of its divisors if valid, 0 otherwise.
   static int fourDivisorsNum(unsigned num) {
     // Trivial cases.
     if (num < 5) return 0;
@@ -37,10 +40,14 @@ public:
     if (num % 2 == 0)
       return isPrime(num / 2) ? (num + 3 + num / 2) : 0;
 
+    // Non-trivial cases. Traverse all odd numbers less than the square root.
     unsigned ub = static_cast<unsigned>(std::round(std::sqrt(num))) + 1;
     for (unsigned k = 3; k < ub; k += 2) {
+      // Note once we have num % k == 0, it is guaranteed that k is a prime,
+      // otherwise any of its prime divisor should have been visited before.
       if (num % k == 0 && num != k * k)
-        return (isPrime(num / k) || num / k == k * k) ? (num + k + num / k + 1) : 0;
+        return (isPrime(num / k) || num / k == k * k) ?
+            (num + k + num / k + 1) : 0;
     }
     return 0;    
   }
